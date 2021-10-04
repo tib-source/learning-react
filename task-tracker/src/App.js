@@ -1,7 +1,9 @@
 import Header from "./components/Header";
 import Tasks from "./components/Tasks";
+import AddTask from "./components/AddTask";
 import { useState } from "react";
 function App() {
+  const [showAdd, setShowAdd] = useState(false)
   const [tasks, setTasks] = useState([
     {
       id: 1,
@@ -23,6 +25,12 @@ function App() {
     },
   ]);
 
+  // create Task
+  const createTask = (newTask) => {
+    console.log(tasks)
+    setTasks([...tasks, newTask])
+  }
+
   // delete Task
 
   const deleteTask = (id) => {
@@ -42,9 +50,18 @@ function App() {
       )
     );
   };
+
+  // toggle form 
+
+  const toggleAdd =()=>{
+    setShowAdd(!showAdd)
+    console.log("running")
+  }
   return (
     <div className="container">
-      <Header />
+      <Header toggleAdd={toggleAdd} showAdd={showAdd} />
+      { showAdd && <AddTask createTask={createTask} />}
+
       {tasks.length > 0 ? (
         <Tasks tasks={tasks} onDelete={deleteTask} reminder={toggleReminder} />
       ) : (
