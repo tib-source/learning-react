@@ -28,32 +28,42 @@
             align-items: center;
         }
 
+        .meow { 
+            flex-direction: column;
+        }
         .content {
             width: 100%;
             height: 100%;
             flex-direction: column;
         }
 
-        .choose span {
+        span {
+            width: 100px;
+            height: 100px;
             margin: 0.25em;
             cursor: pointer;
             font-size: 70px;
         }
 
-        .choose span:hover {
+        span:hover {
             transform: scale(2);
         }
     </style>
+
 </head>
 
 <body>
     <div class="content flex">
+        <div class="flex meow">
+            <h1>Winner: <span id="winner"></span></h1>
+            <p>Game: <p id="count"></p> </p>
+        </div>
         <div class="flex">
-            <div class="human">
+            <div class="human flex">
                 <h1>Human: </h1>
                 <span id="human"></span>
             </div>
-            <div class="computer">
+            <div class="computer flex">
                 <h1>Computer: </h1>
                 <span id="computer"></span>
             </div>
@@ -67,18 +77,36 @@
 
         <script>
             let choice = ["rock", "paper", "scissor"]
-            function generateComputerAns(){ 
-                return choice[Math.floor(Math.random() * 3)] 
+            let emoji = { rock: "🗿", paper: "📜", scissor: "✂" }
+            let count = 1
+            let wins = 0 
+            let loss = 0 
+            let limit = 5 
+            function generateComputerAns() {
+                return choice[Math.floor(Math.random() * 3)]
+            }
+            function reset(){ 
+                count = 1
+                wins = 0 
+                loss = 0 
+                document.getElementById("winner").innerText= ""
             }
             function eval(answer) {
+                if(count == 6){ 
+                    reset()
+                }
                 let computer = generateComputerAns()
+                displayComputer(computer)
+                displayHuman(answer)
                 console.log("computer is : " + computer)
                 switch (answer) {
                     case "rock":
                         if (computer == "scissor") {
                             console.log("you win")
+                            wins++
                         } else if (computer == "paper") {
                             console.log("you lose")
+                            loss++
                         } else {
                             console.log("tie")
                         }
@@ -86,24 +114,48 @@
                     case "paper":
                         if (computer == "scissor") {
                             console.log("you lose")
+                            loss++
                         } else if (computer == "paper") {
                             console.log("you tie")
                         } else {
                             console.log("you win")
+                            wins++
                         }
                         break
                     case "scissor":
                         if (computer == "rock") {
                             console.log("you lose")
+                            loss++
                         } else if (computer == "paper") {
                             console.log("you win")
+                            wins++
                         } else {
                             console.log("tie")
                         }
                         break
-                    default: 
-                    console.log("how tf did u get here")
+                    default:
+                        console.log("how tf did u get here")
                 }
+                updateCount(count)
+                if(count == 5){ 
+                    displayEnd(wins>loss ? "Human" : "Computer")
+                }
+                count++
+            }
+            function updateCount(count){
+                document.getElementById("count").innerText = count
+            }
+            function displayEnd(msg){ 
+                document.getElementById("winner").innerText= msg
+            }
+            function displayComputer(answer) {
+                let compAnswer = document.getElementById("computer");
+                compAnswer.innerHTML = emoji[answer]
+            }
+
+            function displayHuman(answer) {
+                let humanAnswer = document.getElementById("human");
+                humanAnswer.innerHTML = emoji[answer]
             }
         </script>
     </div>
