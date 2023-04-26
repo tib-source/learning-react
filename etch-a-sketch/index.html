@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Etch-a-Sketch</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            width: 100%;
+            height: 100vh;
+        }
+
+        .flex {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+        }
+
+        .container {
+            width: 100%;
+            height: 100%;
+            gap: 5em;
+        }
+
+        #canvas {
+            width: 500px;
+            height: 500px;
+            background-color: antiquewhite
+        }
+
+        .sidebar {
+            flex-direction: column;
+        }
+
+        .sidebar>* {
+            width: 140px;
+            margin: 0.5em;
+            padding: 0.55em 1em;
+
+        }
+
+        .box {
+            width: 10px;
+            height: 10px;
+            user-select: none;
+        }
+
+        .row {
+            width: 100%;
+            height: 10px;
+            user-select: none;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="flex container">
+        <div class="flex sidebar">
+            <input type="color" name="color" id="color" value="black">
+            <button id="rainbow">Rainbow</button>
+            <button id="erase">Eraser</button>
+            <button id="clear">Clear</button>
+            <input type="range" id="range" id="range" min="1" max="100" value="64" step="1" style="padding:0;">
+        </div>
+
+        <div class="content">
+            <div id="canvas"></div>
+        </div>
+    </div>
+
+    <script>
+        let grid = document.getElementById("canvas");
+        let range = document.getElementById("range")
+        let mouseDown = false
+        let colorInput = document.getElementById("color")
+        let erasor = false
+        let rainbow = false
+        let erasorButton = document.getElementById("erase")
+        let clear = document.getElementById("clear")
+
+        clear.addEventListener("click", ()=> drawGrid(range.value))
+
+        erasorButton.addEventListener("click", () => {
+            erasor = true
+        })
+        colorInput.addEventListener("click", () => {
+            rainbow = false;
+            erasor = false
+        })
+        document.getElementById("rainbow").addEventListener("click", () => {
+            rainbow = true
+            erasor = false
+        })
+        drawGrid(range.value)
+        document.addEventListener("mousedown", () => mouseDown = true)
+        document.addEventListener("mouseup", () => mouseDown = false)
+        range.addEventListener("change", () => drawGrid(range.value))
+        function drawGrid(value) {
+            grid.innerHTML = ""
+            for (let i = 0; i < value; i++) {
+                let row = document.createElement("div");
+                row.classList.add("row")
+                row.classList.add("flex")
+                row.style.height = `${500 / value}px`
+                row.style.width = `100%`
+
+                for (let j = 0; j < value; j++) {
+                    let box = document.createElement("div");
+                    box.classList.add("box")
+                    box.id = `${i}-${j}`
+                    box.style.width = `${500 / value}px`
+                    box.style.height = `${500 / value}px`
+                    row.appendChild(box);
+
+
+
+                    box.addEventListener("mouseover", (e) => {
+                        changeBackground(e)
+                    })
+
+                    box.addEventListener("click", (e) => {
+                        mouseDown = true
+                        changeBackground(e)
+                        mouseDown = false
+                    })
+
+
+                }
+
+                grid.appendChild(row)
+
+
+            }
+        }
+
+        function random(number) {
+            return Math.floor(Math.random() * number)
+        }
+        function changeBackground(e) {
+            if (mouseDown) {
+                color = ""
+                if (!erasor) {
+                    color = colorInput.value
+
+                    if (rainbow) {
+                        color = `rgb(${random(255)}, ${random(255)},${random(255)})`
+                    }
+                }
+                e.target.style.background = color
+
+
+
+            }
+        }
+    </script>
+</body>
+
+</html>
