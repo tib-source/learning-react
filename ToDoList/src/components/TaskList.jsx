@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 export default function TaskList({ taskArray, setComplete, handleDelete }) {
     let placeholder = {
         name: "No Tasks to do",
@@ -18,7 +19,6 @@ export default function TaskList({ taskArray, setComplete, handleDelete }) {
 }
 
 
-// eslint-disable-next-line react/prop-types
 function Task({ task, setComplete, handleDelete }) {
     return (
         <div className="task" style={
